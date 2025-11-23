@@ -1,0 +1,38 @@
+name: Generate Manifest
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  generate-manifest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate manifest.json
+        run: |
+          chmod +x scripts/generate-manifest.sh
+          scripts/generate-manifest.sh
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code manifest.json || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add manifest.json
+          git commit -m "Update manifest.json"
+          git push
