@@ -1,0 +1,25 @@
+# Build artifacts
+build/
+*.o
+*.a
+*.so
+*.dylib
+
+# Test artifacts
+coverage/
+*.gcda
+*.gcno
+*.gcov
+
+# Temporary files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Editor directories
+.vscode/
+.idea/
+
+# Dependency files
+*.d
